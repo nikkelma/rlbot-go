@@ -7,24 +7,24 @@ import (
 // Bridge is the interface implemented by platform-specific bridges
 type Bridge interface {
 	// Interface.hpp
-	IsInitialized() bool
+	IsInitialized() (bool, error)
 
 	// GameFunctions/BallPrediction.hpp
-	GetBallPrediction() flat.BallPrediction
+	GetBallPrediction() (flat.BallPrediction, error)
 
 	// GameFunctions/GameFunctions.hpp
 	SetGameState(flat.DesiredGameState) error
 	StartMatch(flat.MatchSettings) error
 
 	// GameFunctions/GamePacket.hpp
-	UpdateFieldInfo() flat.FieldInfo
-	UpdateLiveDataPacket() flat.GameTickPacket
-	UpdateRigidBodyTick() flat.RigidBodyTick
-	GetMatchSettings() flat.MatchSettings
+	UpdateFieldInfo() (flat.FieldInfo, error)
+	UpdateLiveDataPacket() (flat.GameTickPacket, error)
+	UpdateRigidBodyTick() (flat.RigidBodyTick, error)
+	GetMatchSettings() (flat.MatchSettings, error)
 
 	// GameFunctions/PlayerInfo.hpp
 	SendQuickChat(flat.QuickChat) error
-	ReceiveChat() flat.QuickChatMessages
+	ReceiveChat() (flat.QuickChatMessages, error)
 	UpdatePlayerInput(flat.PlayerInput) error
 
 	// RenderFunctions/RenderFunctions.hpp
