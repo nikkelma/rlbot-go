@@ -15,7 +15,7 @@ func newBridge() (bridge Bridge, err error) {
 	var dllName string = getDllName()
 	fmt.Print(dllName)
 	// TODO - confirm avoidance of DLL pre-loading attacks
-	rlBotInterfaceDll, err := windows.MustLoadDLL(dllName)
+	rlBotInterfaceDll, err := windows.LoadDLL(dllName)
 	if err != nil {
 		return nil, err
 	}
@@ -64,10 +64,7 @@ func (b *bridgeWindows) IsInitialized() (bool, error) {
 	if errno != syscall.Errno(0) {
 		return false, errno
 	}
-	fmt.Print("Result")
-	fmt.Print(res)
-
-	return false, nil
+	return res != 0, nil
 }
 
 // GameFunctions/BallPrediction.hpp

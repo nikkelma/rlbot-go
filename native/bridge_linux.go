@@ -2,6 +2,6 @@
 
 package native
 
-func newBridge() Bridge {
-	return nil
+func newBridge() (Bridge, error) {
+	return nil, nil
 }

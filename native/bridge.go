@@ -32,6 +32,6 @@ type Bridge interface {
 }
 
 // NewBridge returns a new platform-specific bridge
-func NewBridge() Bridge {
+func NewBridge() (Bridge, error) {
 	return newBridge()
 }
