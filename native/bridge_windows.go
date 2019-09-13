@@ -3,14 +3,17 @@
 package native
 
 import (
+	"github.com/nikkelma/rlbot-go/flat"
+	rlbotstatus "github.com/nikkelma/rlbot-go/native/status"
+
 	"fmt"
+	"reflect"
+	// "runtime"
 	"sync"
 	"syscall"
 	"unsafe"
 
 	"golang.org/x/sys/windows"
-
-	"github.com/nikkelma/rlbot-go/flat"
 )
 
 type windowsProc struct {
@@ -121,12 +124,58 @@ func (b *bridgeWindows) GetBallPrediction() (*flat.BallPrediction, error) {
 }
 
 // GameFunctions/GameFunctions.hpp
-func (b *bridgeWindows) SetGameState(*flat.DesiredGameState) error {
-	return fmt.Errorf("Not implemented")
+func (b *bridgeWindows) SetGameState(gameState *flat.DesiredGameState) error {
+	if b.setGameStateProc == nil {
+		b.setGameStateProc = createWindowsProc(b.rlBotInterfaceDll, "SetGameState")
+	}
+
+	gameStateBytes := gameState.Table().Bytes
+	gameStateSize := len(gameStateBytes)
+	gameStateBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&gameStateBytes))
+	
+	b.setGameStateProc.Lock()
+	defer b.setGameStateProc.Unlock()
+
+	status, _, errno :=	b.setGameStateProc.Call(gameStateBytesHeader.Data, uintptr(gameStateSize))
+
+	if errno != syscall.Errno(0) {
+		return fmt.Errorf("SetGameState error: %v", errno)
+	}
+
+	rlbotStatus := rlbotstatus.RLBotCoreStatus(status)
+
+	if rlbotStatus != rlbotstatus.Success {
+		return fmt.Errorf("SetGameState bad status: %v", rlbotStatus)
+	}
+
+	return nil
 }
 
-func (b *bridgeWindows) StartMatch(*flat.MatchSettings) error {
-	return fmt.Errorf("Not implemented")
+func (b *bridgeWindows) StartMatch(matchSettings *flat.MatchSettings) error {
+	if b.startMatchFlatbufferProc == nil {
+		b.startMatchFlatbufferProc = createWindowsProc(b.rlBotInterfaceDll, "StartMatchFlatbuffer")
+	}
+
+	matchSettingsBytes := matchSettings.Table().Bytes
+	matchSettingsSize := len(matchSettingsBytes)
+	matchSettingsBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&matchSettingsBytes))
+	
+	b.startMatchFlatbufferProc.Lock()
+	defer b.startMatchFlatbufferProc.Unlock()
+
+	status, _, errno :=	b.startMatchFlatbufferProc.Call(matchSettingsBytesHeader.Data, uintptr(matchSettingsSize))
+
+	if errno != syscall.Errno(0) {
+		return fmt.Errorf("StartMatch error: %v", errno)
+	}
+
+	rlbotStatus := rlbotstatus.RLBotCoreStatus(status)
+
+	if rlbotStatus != rlbotstatus.Success {
+		return fmt.Errorf("StartMatch bad status: %v", rlbotStatus)
+	}
+
+	return nil
 }
 
 // GameFunctions/GamePacket.hpp
@@ -247,8 +296,31 @@ func (b *bridgeWindows) GetMatchSettings() (*flat.MatchSettings, error) {
 }
 
 // GameFunctions/PlayerInfo.hpp
-func (b *bridgeWindows) SendQuickChat(*flat.QuickChat) error {
-	return fmt.Errorf("Not implemented")
+func (b *bridgeWindows) SendQuickChat(quickChat *flat.QuickChat) error {
+	if b.sendQuickChatProc == nil {
+		b.sendQuickChatProc = createWindowsProc(b.rlBotInterfaceDll, "SendQuickChat")
+	}
+
+	quickChatBytes := quickChat.Table().Bytes
+	quickChatSize := len(quickChatBytes)
+	quickChatBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&quickChatBytes))
+	
+	b.sendQuickChatProc.Lock()
+	defer b.sendQuickChatProc.Unlock()
+
+	status, _, errno :=	b.sendQuickChatProc.Call(quickChatBytesHeader.Data, uintptr(quickChatSize))
+
+	if errno != syscall.Errno(0) {
+		return fmt.Errorf("SendQuickChat error: %v", errno)
+	}
+
+	rlbotStatus := rlbotstatus.RLBotCoreStatus(status)
+
+	if rlbotStatus != rlbotstatus.Success {
+		return fmt.Errorf("SendQuickChat bad status: %v", rlbotStatus)
+	}
+
+	return nil
 }
 
 func (b *bridgeWindows) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error) {
@@ -280,13 +352,59 @@ func (b *bridgeWindows) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (
 	return quickChatMessages, nil
 }
 
-func (b *bridgeWindows) UpdatePlayerInput(*flat.PlayerInput) error {
-	return fmt.Errorf("Not implemented")
+func (b *bridgeWindows) UpdatePlayerInput(playerInput *flat.PlayerInput) error {
+	if b.updatePlayerInputFlatbufferProc == nil {
+		b.updatePlayerInputFlatbufferProc = createWindowsProc(b.rlBotInterfaceDll, "UpdatePlayerInputFlatbuffer")
+	}
+
+	playerInputBytes := playerInput.Table().Bytes
+	playerInputSize := len(playerInputBytes)
+	playerInputBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&playerInputBytes))
+	
+	b.updatePlayerInputFlatbufferProc.Lock()
+	defer b.updatePlayerInputFlatbufferProc.Unlock()
+
+	status, _, errno :=	b.updatePlayerInputFlatbufferProc.Call(playerInputBytesHeader.Data, uintptr(playerInputSize))
+
+	if errno != syscall.Errno(0) {
+		return fmt.Errorf("UpdatePlayerInput error: %v", errno)
+	}
+
+	rlbotStatus := rlbotstatus.RLBotCoreStatus(status)
+
+	if rlbotStatus != rlbotstatus.Success {
+		return fmt.Errorf("UpdatePlayerInput bad status: %v", rlbotStatus)
+	}
+
+	return nil
 }
 
 // RenderFunctions/RenderFunctions.hpp
-func (b *bridgeWindows) RenderGroup(*flat.RenderGroup) error {
-	return fmt.Errorf("Not implemented")
+func (b *bridgeWindows) RenderGroup(renderGroup *flat.RenderGroup) error {
+	if b.renderGroupProc == nil {
+		b.renderGroupProc = createWindowsProc(b.rlBotInterfaceDll, "RenderGroup")
+	}
+
+	renderGroupBytes := renderGroup.Table().Bytes
+	renderGroupSize := len(renderGroupBytes)
+	renderGroupBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&renderGroupBytes))
+	
+	b.renderGroupProc.Lock()
+	defer b.renderGroupProc.Unlock()
+
+	status, _, errno :=	b.renderGroupProc.Call(renderGroupBytesHeader.Data, uintptr(renderGroupSize))
+
+	if errno != syscall.Errno(0) {
+		return fmt.Errorf("RenderGroup error: %v", errno)
+	}
+
+	rlbotStatus := rlbotstatus.RLBotCoreStatus(status)
+
+	if rlbotStatus != rlbotstatus.Success {
+		return fmt.Errorf("RenderGroup bad status: %v", rlbotStatus)
+	}
+
+	return nil
 }
 
 // ensure *bridgeWindows satisfies Bridge interface

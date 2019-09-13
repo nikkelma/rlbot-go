@@ -8,6 +8,8 @@ import (
 	// "os"
 	// "os/signal"
 	"time"
+
+	flatbuffers "github.com/google/flatbuffers/go"
 )
 
 func main() {
@@ -54,4 +56,18 @@ func main() {
 
 	fmt.Printf("GameMode: %v\n", gameModeStr)
 	fmt.Printf("GameMap: %v\n", gameMapStr)
+
+	builder := flatbuffers.NewBuilder(0)
+	flat.QuickChatStart(builder)
+	flat.QuickChatAddQuickChatSelection(builder, 5)
+	flat.QuickChatAddPlayerIndex(builder, 1)
+	offset := flat.QuickChatEnd(builder)
+
+	builder.Finish(offset)
+
+	err = bridge.SendQuickChat(flat.GetRootAsQuickChat(builder.FinishedBytes(), offset))
+	if err != nil {
+		fmt.Printf("SendQuickChat error: %v", err)
+		return
+	}
 }
