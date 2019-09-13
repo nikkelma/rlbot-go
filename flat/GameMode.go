@@ -3,18 +3,17 @@
 package flat
 
 const (
-	GameModeSoccer = 0
-	GameModeHoops = 1
+	GameModeSoccer   = 0
+	GameModeHoops    = 1
 	GameModeDropshot = 2
-	GameModeHockey = 3
-	GameModeRumble = 4
+	GameModeHockey   = 3
+	GameModeRumble   = 4
 )
 
 var EnumNamesGameMode = map[int]string{
-	GameModeSoccer:"Soccer",
-	GameModeHoops:"Hoops",
-	GameModeDropshot:"Dropshot",
-	GameModeHockey:"Hockey",
-	GameModeRumble:"Rumble",
+	GameModeSoccer:   "Soccer",
+	GameModeHoops:    "Hoops",
+	GameModeDropshot: "Dropshot",
+	GameModeHockey:   "Hockey",
+	GameModeRumble:   "Rumble",
 }
-

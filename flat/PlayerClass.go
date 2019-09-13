@@ -3,18 +3,17 @@
 package flat
 
 const (
-	PlayerClassNONE = 0
-	PlayerClassRLBotPlayer = 1
-	PlayerClassHumanPlayer = 2
-	PlayerClassPsyonixBotPlayer = 3
+	PlayerClassNONE                 = 0
+	PlayerClassRLBotPlayer          = 1
+	PlayerClassHumanPlayer          = 2
+	PlayerClassPsyonixBotPlayer     = 3
 	PlayerClassPartyMemberBotPlayer = 4
 )
 
 var EnumNamesPlayerClass = map[int]string{
-	PlayerClassNONE:"NONE",
-	PlayerClassRLBotPlayer:"RLBotPlayer",
-	PlayerClassHumanPlayer:"HumanPlayer",
-	PlayerClassPsyonixBotPlayer:"PsyonixBotPlayer",
-	PlayerClassPartyMemberBotPlayer:"PartyMemberBotPlayer",
+	PlayerClassNONE:                 "NONE",
+	PlayerClassRLBotPlayer:          "RLBotPlayer",
+	PlayerClassHumanPlayer:          "HumanPlayer",
+	PlayerClassPsyonixBotPlayer:     "PsyonixBotPlayer",
+	PlayerClassPartyMemberBotPlayer: "PartyMemberBotPlayer",
 }
-

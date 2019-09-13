@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BallMaxSpeedOptionDefault = 0
-	BallMaxSpeedOptionSlow = 1
-	BallMaxSpeedOptionFast = 2
+	BallMaxSpeedOptionDefault    = 0
+	BallMaxSpeedOptionSlow       = 1
+	BallMaxSpeedOptionFast       = 2
 	BallMaxSpeedOptionSuper_Fast = 3
 )
 
 var EnumNamesBallMaxSpeedOption = map[int]string{
-	BallMaxSpeedOptionDefault:"Default",
-	BallMaxSpeedOptionSlow:"Slow",
-	BallMaxSpeedOptionFast:"Fast",
-	BallMaxSpeedOptionSuper_Fast:"Super_Fast",
+	BallMaxSpeedOptionDefault:    "Default",
+	BallMaxSpeedOptionSlow:       "Slow",
+	BallMaxSpeedOptionFast:       "Fast",
+	BallMaxSpeedOptionSuper_Fast: "Super_Fast",
 }
-

@@ -3,16 +3,15 @@
 package flat
 
 const (
-	GravityOptionDefault = 0
-	GravityOptionLow = 1
-	GravityOptionHigh = 2
+	GravityOptionDefault    = 0
+	GravityOptionLow        = 1
+	GravityOptionHigh       = 2
 	GravityOptionSuper_High = 3
 )
 
 var EnumNamesGravityOption = map[int]string{
-	GravityOptionDefault:"Default",
-	GravityOptionLow:"Low",
-	GravityOptionHigh:"High",
-	GravityOptionSuper_High:"Super_High",
+	GravityOptionDefault:    "Default",
+	GravityOptionLow:        "Low",
+	GravityOptionHigh:       "High",
+	GravityOptionSuper_High: "Super_High",
 }
-

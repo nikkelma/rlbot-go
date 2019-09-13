@@ -3,16 +3,15 @@
 package flat
 
 const (
-	SeriesLengthOptionUnlimited = 0
+	SeriesLengthOptionUnlimited   = 0
 	SeriesLengthOptionThree_Games = 1
-	SeriesLengthOptionFive_Games = 2
+	SeriesLengthOptionFive_Games  = 2
 	SeriesLengthOptionSeven_Games = 3
 )
 
 var EnumNamesSeriesLengthOption = map[int]string{
-	SeriesLengthOptionUnlimited:"Unlimited",
-	SeriesLengthOptionThree_Games:"Three_Games",
-	SeriesLengthOptionFive_Games:"Five_Games",
-	SeriesLengthOptionSeven_Games:"Seven_Games",
+	SeriesLengthOptionUnlimited:   "Unlimited",
+	SeriesLengthOptionThree_Games: "Three_Games",
+	SeriesLengthOptionFive_Games:  "Five_Games",
+	SeriesLengthOptionSeven_Games: "Seven_Games",
 }
-

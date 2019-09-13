@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BallTypeOptionDefault = 0
-	BallTypeOptionCube = 1
-	BallTypeOptionPuck = 2
+	BallTypeOptionDefault    = 0
+	BallTypeOptionCube       = 1
+	BallTypeOptionPuck       = 2
 	BallTypeOptionBasketball = 3
 )
 
 var EnumNamesBallTypeOption = map[int]string{
-	BallTypeOptionDefault:"Default",
-	BallTypeOptionCube:"Cube",
-	BallTypeOptionPuck:"Puck",
-	BallTypeOptionBasketball:"Basketball",
+	BallTypeOptionDefault:    "Default",
+	BallTypeOptionCube:       "Cube",
+	BallTypeOptionPuck:       "Puck",
+	BallTypeOptionBasketball: "Basketball",
 }
-

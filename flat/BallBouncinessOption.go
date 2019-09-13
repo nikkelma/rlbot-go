@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BallBouncinessOptionDefault = 0
-	BallBouncinessOptionLow = 1
-	BallBouncinessOptionHigh = 2
+	BallBouncinessOptionDefault    = 0
+	BallBouncinessOptionLow        = 1
+	BallBouncinessOptionHigh       = 2
 	BallBouncinessOptionSuper_High = 3
 )
 
 var EnumNamesBallBouncinessOption = map[int]string{
-	BallBouncinessOptionDefault:"Default",
-	BallBouncinessOptionLow:"Low",
-	BallBouncinessOptionHigh:"High",
-	BallBouncinessOptionSuper_High:"Super_High",
+	BallBouncinessOptionDefault:    "Default",
+	BallBouncinessOptionLow:        "Low",
+	BallBouncinessOptionHigh:       "High",
+	BallBouncinessOptionSuper_High: "Super_High",
 }
-

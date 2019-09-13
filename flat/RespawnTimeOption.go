@@ -3,16 +3,15 @@
 package flat
 
 const (
-	RespawnTimeOptionThree_Seconds = 0
-	RespawnTimeOptionTwo_Seconds = 1
-	RespawnTimeOptionOne_Seconds = 2
+	RespawnTimeOptionThree_Seconds      = 0
+	RespawnTimeOptionTwo_Seconds        = 1
+	RespawnTimeOptionOne_Seconds        = 2
 	RespawnTimeOptionDisable_Goal_Reset = 3
 )
 
 var EnumNamesRespawnTimeOption = map[int]string{
-	RespawnTimeOptionThree_Seconds:"Three_Seconds",
-	RespawnTimeOptionTwo_Seconds:"Two_Seconds",
-	RespawnTimeOptionOne_Seconds:"One_Seconds",
-	RespawnTimeOptionDisable_Goal_Reset:"Disable_Goal_Reset",
+	RespawnTimeOptionThree_Seconds:      "Three_Seconds",
+	RespawnTimeOptionTwo_Seconds:        "Two_Seconds",
+	RespawnTimeOptionOne_Seconds:        "One_Seconds",
+	RespawnTimeOptionDisable_Goal_Reset: "Disable_Goal_Reset",
 }
-

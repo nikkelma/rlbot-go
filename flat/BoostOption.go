@@ -3,18 +3,17 @@
 package flat
 
 const (
-	BoostOptionNormal_Boost = 0
+	BoostOptionNormal_Boost    = 0
 	BoostOptionUnlimited_Boost = 1
-	BoostOptionSlow_Recharge = 2
-	BoostOptionRapid_Recharge = 3
-	BoostOptionNo_Boost = 4
+	BoostOptionSlow_Recharge   = 2
+	BoostOptionRapid_Recharge  = 3
+	BoostOptionNo_Boost        = 4
 )
 
 var EnumNamesBoostOption = map[int]string{
-	BoostOptionNormal_Boost:"Normal_Boost",
-	BoostOptionUnlimited_Boost:"Unlimited_Boost",
-	BoostOptionSlow_Recharge:"Slow_Recharge",
-	BoostOptionRapid_Recharge:"Rapid_Recharge",
-	BoostOptionNo_Boost:"No_Boost",
+	BoostOptionNormal_Boost:    "Normal_Boost",
+	BoostOptionUnlimited_Boost: "Unlimited_Boost",
+	BoostOptionSlow_Recharge:   "Slow_Recharge",
+	BoostOptionRapid_Recharge:  "Rapid_Recharge",
+	BoostOptionNo_Boost:        "No_Boost",
 }
-

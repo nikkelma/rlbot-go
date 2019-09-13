@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BallSizeOptionDefault = 0
-	BallSizeOptionSmall = 1
-	BallSizeOptionLarge = 2
+	BallSizeOptionDefault  = 0
+	BallSizeOptionSmall    = 1
+	BallSizeOptionLarge    = 2
 	BallSizeOptionGigantic = 3
 )
 
 var EnumNamesBallSizeOption = map[int]string{
-	BallSizeOptionDefault:"Default",
-	BallSizeOptionSmall:"Small",
-	BallSizeOptionLarge:"Large",
-	BallSizeOptionGigantic:"Gigantic",
+	BallSizeOptionDefault:  "Default",
+	BallSizeOptionSmall:    "Small",
+	BallSizeOptionLarge:    "Large",
+	BallSizeOptionGigantic: "Gigantic",
 }
-

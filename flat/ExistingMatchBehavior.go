@@ -13,8 +13,7 @@ const (
 )
 
 var EnumNamesExistingMatchBehavior = map[int]string{
-	ExistingMatchBehaviorRestart_If_Different:"Restart_If_Different",
-	ExistingMatchBehaviorRestart:"Restart",
-	ExistingMatchBehaviorContinue_And_Spawn:"Continue_And_Spawn",
+	ExistingMatchBehaviorRestart_If_Different: "Restart_If_Different",
+	ExistingMatchBehaviorRestart:              "Restart",
+	ExistingMatchBehaviorContinue_And_Spawn:   "Continue_And_Spawn",
 }
-

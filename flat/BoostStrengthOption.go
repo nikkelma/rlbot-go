@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BoostStrengthOptionOne = 0
+	BoostStrengthOptionOne         = 0
 	BoostStrengthOptionOneAndAHalf = 1
-	BoostStrengthOptionTwo = 2
-	BoostStrengthOptionTen = 3
+	BoostStrengthOptionTwo         = 2
+	BoostStrengthOptionTen         = 3
 )
 
 var EnumNamesBoostStrengthOption = map[int]string{
-	BoostStrengthOptionOne:"One",
-	BoostStrengthOptionOneAndAHalf:"OneAndAHalf",
-	BoostStrengthOptionTwo:"Two",
-	BoostStrengthOptionTen:"Ten",
+	BoostStrengthOptionOne:         "One",
+	BoostStrengthOptionOneAndAHalf: "OneAndAHalf",
+	BoostStrengthOptionTwo:         "Two",
+	BoostStrengthOptionTen:         "Ten",
 }
-

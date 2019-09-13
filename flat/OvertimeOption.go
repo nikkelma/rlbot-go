@@ -3,14 +3,13 @@
 package flat
 
 const (
-	OvertimeOptionUnlimited = 0
+	OvertimeOptionUnlimited            = 0
 	OvertimeOptionFive_Max_First_Score = 1
 	OvertimeOptionFive_Max_Random_Team = 2
 )
 
 var EnumNamesOvertimeOption = map[int]string{
-	OvertimeOptionUnlimited:"Unlimited",
-	OvertimeOptionFive_Max_First_Score:"Five_Max_First_Score",
-	OvertimeOptionFive_Max_Random_Team:"Five_Max_Random_Team",
+	OvertimeOptionUnlimited:            "Unlimited",
+	OvertimeOptionFive_Max_First_Score: "Five_Max_First_Score",
+	OvertimeOptionFive_Max_Random_Team: "Five_Max_Random_Team",
 }
-

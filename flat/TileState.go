@@ -13,9 +13,8 @@ const (
 )
 
 var EnumNamesTileState = map[int]string{
-	TileStateUnknown:"Unknown",
-	TileStateFilled:"Filled",
-	TileStateDamaged:"Damaged",
-	TileStateOpen:"Open",
+	TileStateUnknown: "Unknown",
+	TileStateFilled:  "Filled",
+	TileStateDamaged: "Damaged",
+	TileStateOpen:    "Open",
 }
-

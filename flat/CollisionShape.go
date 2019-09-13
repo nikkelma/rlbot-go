@@ -3,16 +3,15 @@
 package flat
 
 const (
-	CollisionShapeNONE = 0
-	CollisionShapeBoxShape = 1
-	CollisionShapeSphereShape = 2
+	CollisionShapeNONE          = 0
+	CollisionShapeBoxShape      = 1
+	CollisionShapeSphereShape   = 2
 	CollisionShapeCylinderShape = 3
 )
 
 var EnumNamesCollisionShape = map[int]string{
-	CollisionShapeNONE:"NONE",
-	CollisionShapeBoxShape:"BoxShape",
-	CollisionShapeSphereShape:"SphereShape",
-	CollisionShapeCylinderShape:"CylinderShape",
+	CollisionShapeNONE:          "NONE",
+	CollisionShapeBoxShape:      "BoxShape",
+	CollisionShapeSphereShape:   "SphereShape",
+	CollisionShapeCylinderShape: "CylinderShape",
 }
-

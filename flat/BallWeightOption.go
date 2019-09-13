@@ -3,16 +3,15 @@
 package flat
 
 const (
-	BallWeightOptionDefault = 0
-	BallWeightOptionLight = 1
-	BallWeightOptionHeavy = 2
+	BallWeightOptionDefault     = 0
+	BallWeightOptionLight       = 1
+	BallWeightOptionHeavy       = 2
 	BallWeightOptionSuper_Light = 3
 )
 
 var EnumNamesBallWeightOption = map[int]string{
-	BallWeightOptionDefault:"Default",
-	BallWeightOptionLight:"Light",
-	BallWeightOptionHeavy:"Heavy",
-	BallWeightOptionSuper_Light:"Super_Light",
+	BallWeightOptionDefault:     "Default",
+	BallWeightOptionLight:       "Light",
+	BallWeightOptionHeavy:       "Heavy",
+	BallWeightOptionSuper_Light: "Super_Light",
 }
-
