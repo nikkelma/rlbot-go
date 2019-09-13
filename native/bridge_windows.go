@@ -175,7 +175,7 @@ func (b *bridgeWindows) SendQuickChat(*flat.QuickChat) error {
 	return fmt.Errorf("Not implemented")
 }
 
-func (b *bridgeWindows) ReceiveChat() (*flat.QuickChatMessages, error) {
+func (b *bridgeWindows) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error) {
 	return nil, fmt.Errorf("Not implemented")
 }
 

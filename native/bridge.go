@@ -27,7 +27,7 @@ type Bridge interface {
 
 	// GameFunctions/PlayerInfo.hpp
 	SendQuickChat(*flat.QuickChat) error
-	ReceiveChat() (*flat.QuickChatMessages, error)
+	ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error)
 	UpdatePlayerInput(*flat.PlayerInput) error
 
 	// RenderFunctions/RenderFunctions.hpp
