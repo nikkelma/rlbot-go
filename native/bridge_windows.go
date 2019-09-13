@@ -47,7 +47,6 @@ func newBridge() (Bridge, error) {
 	return bridge, nil
 }
 
-// TODO - determine if locks are needed, refactor to struct to allow for locks
 type bridgeWindows struct {
 	rlBotInterfaceDll                  *windows.DLL
 	freeProc                           *windowsProc
@@ -93,7 +92,32 @@ func (b *bridgeWindows) IsInitialized() (bool, error) {
 
 // GameFunctions/BallPrediction.hpp
 func (b *bridgeWindows) GetBallPrediction() (*flat.BallPrediction, error) {
-	return nil, fmt.Errorf("Not implemented")
+	if b.getBallPredictionProc == nil {
+		b.getBallPredictionProc = createWindowsProc(b.rlBotInterfaceDll, "GetBallPrediction")
+	}
+
+	b.getBallPredictionProc.Lock()
+	defer b.getBallPredictionProc.Unlock()
+
+	ptr, size, errno := b.getBallPredictionProc.Call()
+
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("GetBallPrediction error: %v", errno)
+	}
+
+	ballPredictionBytes := make([]byte, size)
+	for i := 0; i < int(size); i++ {
+		ballPredictionBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
+	}
+
+	_, _, errno = b.freeProc.Call(ptr)
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("Free error: %v", errno)
+	}
+
+	ballPrediction := flat.GetRootAsBallPrediction(ballPredictionBytes, 0)
+
+	return ballPrediction, nil
 }
 
 // GameFunctions/GameFunctions.hpp
@@ -113,6 +137,7 @@ func (b *bridgeWindows) UpdateFieldInfo() (*flat.FieldInfo, error) {
 
 	b.updateFieldInfoFlatbufferProc.Lock()
 	defer b.updateFieldInfoFlatbufferProc.Unlock()
+
 	ptr, size, errno := b.updateFieldInfoFlatbufferProc.Call()
 
 	if errno != syscall.Errno(0) {
@@ -135,11 +160,61 @@ func (b *bridgeWindows) UpdateFieldInfo() (*flat.FieldInfo, error) {
 }
 
 func (b *bridgeWindows) UpdateLiveDataPacket() (*flat.GameTickPacket, error) {
-	return nil, fmt.Errorf("Not implemented")
+	if b.updateLiveDataPacketFlatbufferProc == nil {
+		b.updateLiveDataPacketFlatbufferProc = createWindowsProc(b.rlBotInterfaceDll, "UpdateLiveDataPacketFlatbuffer")
+	}
+
+	b.updateLiveDataPacketFlatbufferProc.Lock()
+	defer b.updateLiveDataPacketFlatbufferProc.Unlock()
+
+	ptr, size, errno := b.updateLiveDataPacketFlatbufferProc.Call()
+
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("UpdateLiveDataPacket error: %v", errno)
+	}
+
+	gameTickPacketBytes := make([]byte, size)
+	for i := 0; i < int(size); i++ {
+		gameTickPacketBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
+	}
+
+	_, _, errno = b.freeProc.Call(ptr)
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("Free error: %v", errno)
+	}
+
+	gameTickPacket := flat.GetRootAsGameTickPacket(gameTickPacketBytes, 0)
+
+	return gameTickPacket, nil
 }
 
 func (b *bridgeWindows) UpdateRigidBodyTick() (*flat.RigidBodyTick, error) {
-	return nil, fmt.Errorf("Not implemented")
+	if b.updateRigidBodyTickFlatbufferProc == nil {
+		b.updateRigidBodyTickFlatbufferProc = createWindowsProc(b.rlBotInterfaceDll, "UpdateRigidBodyTickFlatbuffer")
+	}
+
+	b.updateRigidBodyTickFlatbufferProc.Lock()
+	defer b.updateRigidBodyTickFlatbufferProc.Unlock()
+
+	ptr, size, errno := b.updateRigidBodyTickFlatbufferProc.Call()
+
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("UpdateRigidBodyTick error: %v", errno)
+	}
+
+	rigidBodyTickBytes := make([]byte, size)
+	for i := 0; i < int(size); i++ {
+		rigidBodyTickBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
+	}
+
+	_, _, errno = b.freeProc.Call(ptr)
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("Free error: %v", errno)
+	}
+
+	rigidBodyTick := flat.GetRootAsRigidBodyTick(rigidBodyTickBytes, 0)
+
+	return rigidBodyTick, nil
 }
 
 func (b *bridgeWindows) GetMatchSettings() (*flat.MatchSettings, error) {
@@ -149,6 +224,7 @@ func (b *bridgeWindows) GetMatchSettings() (*flat.MatchSettings, error) {
 
 	b.getMatchSettingsProc.Lock()
 	defer b.getMatchSettingsProc.Unlock()
+
 	ptr, size, errno := b.getMatchSettingsProc.Call()
 
 	if errno != syscall.Errno(0) {
@@ -176,7 +252,32 @@ func (b *bridgeWindows) SendQuickChat(*flat.QuickChat) error {
 }
 
 func (b *bridgeWindows) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error) {
-	return nil, fmt.Errorf("Not implemented")
+	if b.receiveChatProc == nil {
+		b.receiveChatProc = createWindowsProc(b.rlBotInterfaceDll, "ReceiveChat")
+	}
+
+	b.receiveChatProc.Lock()
+	defer b.receiveChatProc.Unlock()
+
+	ptr, size, errno := b.receiveChatProc.Call(uintptr(botIndex), uintptr(teamIndex), uintptr(lastMessageIndex))
+
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("ReceiveChat error: %v", errno)
+	}
+
+	quickChatMessagesBytes := make([]byte, size)
+	for i := 0; i < int(size); i++ {
+		quickChatMessagesBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
+	}
+
+	_, _, errno = b.freeProc.Call(ptr)
+	if errno != syscall.Errno(0) {
+		return nil, fmt.Errorf("Free error: %v", errno)
+	}
+
+	quickChatMessages := flat.GetRootAsQuickChatMessages(quickChatMessagesBytes, 0)
+
+	return quickChatMessages, nil
 }
 
 func (b *bridgeWindows) UpdatePlayerInput(*flat.PlayerInput) error {
