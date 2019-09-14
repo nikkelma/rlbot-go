@@ -11,3 +11,6 @@ mv ./rlbot/flat ./flat
 
 # Clean up intermediate folder
 rm -r ./rlbot
+
+# Apply go fmt
+go fmt ./flat/...
