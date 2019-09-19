@@ -7,6 +7,14 @@ This document intends to detail the design of `rlbot-go`, including the package'
 any deviations from existing RLBot libraries, and any context on how the package is intended to be
 used by consumers.
 
+## Design Goals
+
+Overall, `rlbot-go` intends to fulfill the following design goals:
+- Standardize names to match underlying purposes
+- Allow dependency flexibility when possible
+- Adhere to effective Go best practices
+- Provide performant, robust implementations
+
 ## Deviations
 
 Other libraries accomplishing the same purpose for different languages exist - Python, Rust, C++,
@@ -17,3 +25,6 @@ arise:
 concurrency model and lack of strict inheritance.
 2. The underlying shared library's interface has undergone some refactors, and naming conventions do
 not fully reflect the intention of the interface.
+
+
+
