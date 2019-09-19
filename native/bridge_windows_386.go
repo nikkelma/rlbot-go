@@ -163,14 +163,14 @@ func (b *bridgeWindows386) StartMatch(matchSettings *flat.MatchSettings) error {
 }
 
 // GameFunctions/GamePacket.hpp
-func (b *bridgeWindows386) UpdateFieldInfo() (*flat.FieldInfo, error) {
+func (b *bridgeWindows386) GetFieldInfo() (*flat.FieldInfo, error) {
 	b.updateFieldInfoFlatbufferProc.Lock()
 	defer b.updateFieldInfoFlatbufferProc.Unlock()
 
 	ptr, size, errno := b.updateFieldInfoFlatbufferProc.Call()
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateFieldInfo error: %v", errno)
+		return nil, fmt.Errorf("GetFieldInfo error: %v", errno)
 	}
 
 	fieldInfoBytes := make([]byte, size)
@@ -188,14 +188,14 @@ func (b *bridgeWindows386) UpdateFieldInfo() (*flat.FieldInfo, error) {
 	return fieldInfo, nil
 }
 
-func (b *bridgeWindows386) UpdateLiveDataPacket() (*flat.GameTickPacket, error) {
+func (b *bridgeWindows386) GetLiveGameTickPacket() (*flat.GameTickPacket, error) {
 	b.updateLiveDataPacketFlatbufferProc.Lock()
 	defer b.updateLiveDataPacketFlatbufferProc.Unlock()
 
 	ptr, size, errno := b.updateLiveDataPacketFlatbufferProc.Call()
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateLiveDataPacket error: %v", errno)
+		return nil, fmt.Errorf("GetLiveGameTickPacket error: %v", errno)
 	}
 
 	gameTickPacketBytes := make([]byte, size)
@@ -213,14 +213,14 @@ func (b *bridgeWindows386) UpdateLiveDataPacket() (*flat.GameTickPacket, error) 
 	return gameTickPacket, nil
 }
 
-func (b *bridgeWindows386) UpdateRigidBodyTick() (*flat.RigidBodyTick, error) {
+func (b *bridgeWindows386) GetRigidBodyTick() (*flat.RigidBodyTick, error) {
 	b.updateRigidBodyTickFlatbufferProc.Lock()
 	defer b.updateRigidBodyTickFlatbufferProc.Unlock()
 
 	ptr, size, errno := b.updateRigidBodyTickFlatbufferProc.Call()
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateRigidBodyTick error: %v", errno)
+		return nil, fmt.Errorf("GetRigidBodyTick error: %v", errno)
 	}
 
 	rigidBodyTickBytes := make([]byte, size)
@@ -362,6 +362,3 @@ func (b *bridgeWindows386) RenderGroup(renderGroup *flat.RenderGroup) error {
 
 	return nil
 }
-
-// ensure *bridgeWindows386 satisfies Bridge interface
-var _ Bridge = &bridgeWindows386{}

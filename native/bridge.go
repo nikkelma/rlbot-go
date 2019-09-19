@@ -20,9 +20,9 @@ type Bridge interface {
 	StartMatch(*flat.MatchSettings) error
 
 	// GameFunctions/GamePacket.hpp
-	UpdateFieldInfo() (*flat.FieldInfo, error)
-	UpdateLiveDataPacket() (*flat.GameTickPacket, error)
-	UpdateRigidBodyTick() (*flat.RigidBodyTick, error)
+	GetFieldInfo() (*flat.FieldInfo, error)
+	GetLiveGameTickPacket() (*flat.GameTickPacket, error)
+	GetRigidBodyTick() (*flat.RigidBodyTick, error)
 	GetMatchSettings() (*flat.MatchSettings, error)
 
 	// GameFunctions/PlayerInfo.hpp

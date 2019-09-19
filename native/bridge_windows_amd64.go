@@ -21,6 +21,7 @@ type byteBuffer struct {
 
 const dllName string = "RLBot_Core_Interface.dll"
 
+// TODO - combine architecture-specific implementations?
 func newBridge() (Bridge, error) {
 	fmt.Println(dllName)
 
@@ -172,7 +173,7 @@ func (b *bridgeWindowsAmd64) StartMatch(matchSettings *flat.MatchSettings) error
 }
 
 // GameFunctions/GamePacket.hpp
-func (b *bridgeWindowsAmd64) UpdateFieldInfo() (*flat.FieldInfo, error) {
+func (b *bridgeWindowsAmd64) GetFieldInfo() (*flat.FieldInfo, error) {
 	b.updateFieldInfoFlatbufferProc.Lock()
 	defer b.updateFieldInfoFlatbufferProc.Unlock()
 
@@ -180,7 +181,7 @@ func (b *bridgeWindowsAmd64) UpdateFieldInfo() (*flat.FieldInfo, error) {
 	_, _, errno := b.updateFieldInfoFlatbufferProc.Call(uintptr(unsafe.Pointer(&fieldInfoByteBuffer)))
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateFieldInfo error: %v", errno)
+		return nil, fmt.Errorf("GetFieldInfo error: %v", errno)
 	}
 
 	ptr := fieldInfoByteBuffer.ptr
@@ -201,7 +202,7 @@ func (b *bridgeWindowsAmd64) UpdateFieldInfo() (*flat.FieldInfo, error) {
 	return fieldInfo, nil
 }
 
-func (b *bridgeWindowsAmd64) UpdateLiveDataPacket() (*flat.GameTickPacket, error) {
+func (b *bridgeWindowsAmd64) GetLiveGameTickPacket() (*flat.GameTickPacket, error) {
 	b.updateLiveDataPacketFlatbufferProc.Lock()
 	defer b.updateLiveDataPacketFlatbufferProc.Unlock()
 
@@ -209,7 +210,7 @@ func (b *bridgeWindowsAmd64) UpdateLiveDataPacket() (*flat.GameTickPacket, error
 	_, _, errno := b.updateLiveDataPacketFlatbufferProc.Call(uintptr(unsafe.Pointer(&gameTickPacketByteBuffer)))
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateFieldInfo error: %v", errno)
+		return nil, fmt.Errorf("GetLiveGameTickPacket error: %v", errno)
 	}
 
 	ptr := gameTickPacketByteBuffer.ptr
@@ -230,7 +231,7 @@ func (b *bridgeWindowsAmd64) UpdateLiveDataPacket() (*flat.GameTickPacket, error
 	return gameTickPacket, nil
 }
 
-func (b *bridgeWindowsAmd64) UpdateRigidBodyTick() (*flat.RigidBodyTick, error) {
+func (b *bridgeWindowsAmd64) GetRigidBodyTick() (*flat.RigidBodyTick, error) {
 	b.updateRigidBodyTickFlatbufferProc.Lock()
 	defer b.updateRigidBodyTickFlatbufferProc.Unlock()
 
@@ -238,7 +239,7 @@ func (b *bridgeWindowsAmd64) UpdateRigidBodyTick() (*flat.RigidBodyTick, error) 
 	_, _, errno := b.getMatchSettingsProc.Call(uintptr(unsafe.Pointer(&rigidBodyTickByteBuffer)))
 
 	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("UpdateRigidBodyTick error: %v", errno)
+		return nil, fmt.Errorf("GetRigidBodyTick error: %v", errno)
 	}
 
 	ptr := rigidBodyTickByteBuffer.ptr
@@ -384,6 +385,3 @@ func (b *bridgeWindowsAmd64) RenderGroup(renderGroup *flat.RenderGroup) error {
 
 	return nil
 }
-
-// ensure *bridgeWindowsAmd64 satisfies Bridge interface
-var _ Bridge = &bridgeWindowsAmd64{}
