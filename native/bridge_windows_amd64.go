@@ -231,35 +231,6 @@ func (b *bridgeWindowsAmd64) GetLiveGameTickPacket() (*flat.GameTickPacket, erro
 	return gameTickPacket, nil
 }
 
-func (b *bridgeWindowsAmd64) GetRigidBodyTick() (*flat.RigidBodyTick, error) {
-	b.updateRigidBodyTickFlatbufferProc.Lock()
-	defer b.updateRigidBodyTickFlatbufferProc.Unlock()
-
-	rigidBodyTickByteBuffer := byteBuffer{}
-	_, _, errno := b.getMatchSettingsProc.Call(uintptr(unsafe.Pointer(&rigidBodyTickByteBuffer)))
-
-	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("GetRigidBodyTick error: %v", errno)
-	}
-
-	ptr := rigidBodyTickByteBuffer.ptr
-	size := rigidBodyTickByteBuffer.size
-
-	rigidBodyTickBytes := make([]byte, size)
-	for i := 0; i < int(size); i++ {
-		rigidBodyTickBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
-	}
-
-	_, _, errno = b.freeProc.Call(ptr)
-	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("Free error: %v", errno)
-	}
-
-	rigidBodyTick := flat.GetRootAsRigidBodyTick(rigidBodyTickBytes, 0)
-
-	return rigidBodyTick, nil
-}
-
 func (b *bridgeWindowsAmd64) GetMatchSettings() (*flat.MatchSettings, error) {
 	b.getMatchSettingsProc.Lock()
 	defer b.getMatchSettingsProc.Unlock()

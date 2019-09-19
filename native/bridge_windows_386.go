@@ -213,31 +213,6 @@ func (b *bridgeWindows386) GetLiveGameTickPacket() (*flat.GameTickPacket, error)
 	return gameTickPacket, nil
 }
 
-func (b *bridgeWindows386) GetRigidBodyTick() (*flat.RigidBodyTick, error) {
-	b.updateRigidBodyTickFlatbufferProc.Lock()
-	defer b.updateRigidBodyTickFlatbufferProc.Unlock()
-
-	ptr, size, errno := b.updateRigidBodyTickFlatbufferProc.Call()
-
-	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("GetRigidBodyTick error: %v", errno)
-	}
-
-	rigidBodyTickBytes := make([]byte, size)
-	for i := 0; i < int(size); i++ {
-		rigidBodyTickBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
-	}
-
-	_, _, errno = b.freeProc.Call(ptr)
-	if errno != syscall.Errno(0) {
-		return nil, fmt.Errorf("Free error: %v", errno)
-	}
-
-	rigidBodyTick := flat.GetRootAsRigidBodyTick(rigidBodyTickBytes, 0)
-
-	return rigidBodyTick, nil
-}
-
 func (b *bridgeWindows386) GetMatchSettings() (*flat.MatchSettings, error) {
 	b.getMatchSettingsProc.Lock()
 	defer b.getMatchSettingsProc.Unlock()
