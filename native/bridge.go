@@ -22,7 +22,6 @@ type Bridge interface {
 	// GameFunctions/GamePacket.hpp
 	GetFieldInfo() (*flat.FieldInfo, error)
 	GetLiveGameTickPacket() (*flat.GameTickPacket, error)
-	GetRigidBodyTick() (*flat.RigidBodyTick, error)
 	GetMatchSettings() (*flat.MatchSettings, error)
 
 	// GameFunctions/PlayerInfo.hpp
