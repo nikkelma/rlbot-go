@@ -1,7 +1,7 @@
 package native
 
 import (
-	"github.com/nikkelma/rlbot-go/flat"
+	"github.com/nikkelma/rlbot-go/pkg/flat"
 )
 
 // Bridge is the interface implemented by platform-specific bridges

@@ -1,10 +1,10 @@
-// +build windows 386
+// +build windows amd64
 
 package native
 
 import (
-	"github.com/nikkelma/rlbot-go/flat"
-	rlbotstatus "github.com/nikkelma/rlbot-go/native/status"
+	"github.com/nikkelma/rlbot-go/pkg/flat"
+	rlbotstatus "github.com/nikkelma/rlbot-go/pkg/native/status"
 
 	"fmt"
 	"reflect"
@@ -14,7 +14,12 @@ import (
 	"golang.org/x/sys/windows"
 )
 
-const dllName string = "RLBot_Core_Interface_32.dll"
+type byteBuffer struct {
+	ptr  uintptr
+	size int32
+}
+
+const dllName string = "RLBot_Core_Interface.dll"
 
 // TODO - combine architecture-specific implementations?
 func newBridge() (Bridge, error) {
@@ -32,7 +37,7 @@ func newBridge() (Bridge, error) {
 	}
 	fmt.Println(rlBotInterfaceDll)
 
-	bridge := &bridgeWindows386{
+	bridge := &bridgeWindowsAmd64{
 		rlBotInterfaceDll:                  rlBotInterfaceDll,
 		freeProc:                           newWindowsProc(rlBotInterfaceDll, "Free"),
 		isInitializedProc:                  newWindowsProc(rlBotInterfaceDll, "IsInitialized"),
@@ -51,7 +56,8 @@ func newBridge() (Bridge, error) {
 	return bridge, nil
 }
 
-type bridgeWindows386 struct {
+// TODO - combine architecture-specific implementations?
+type bridgeWindowsAmd64 struct {
 	rlBotInterfaceDll                  *windows.DLL
 	freeProc                           windowsProc
 	isInitializedProc                  windowsProc
@@ -68,8 +74,8 @@ type bridgeWindows386 struct {
 	renderGroupProc                    windowsProc
 }
 
-func (b *bridgeWindows386) Close() error {
-	fmt.Println("bridgeWindows386 Close")
+func (b *bridgeWindowsAmd64) Close() error {
+	fmt.Println("bridgeWindowsAmd64 Close")
 
 	if b.rlBotInterfaceDll == nil {
 		return fmt.Errorf("nil rlBotInterfaceDll")
@@ -78,7 +84,7 @@ func (b *bridgeWindows386) Close() error {
 }
 
 // Interface.hpp
-func (b *bridgeWindows386) IsInitialized() (bool, error) {
+func (b *bridgeWindowsAmd64) IsInitialized() (bool, error) {
 	b.isInitializedProc.Lock()
 	defer b.isInitializedProc.Unlock()
 
@@ -90,15 +96,19 @@ func (b *bridgeWindows386) IsInitialized() (bool, error) {
 }
 
 // GameFunctions/BallPrediction.hpp
-func (b *bridgeWindows386) GetBallPrediction() (*flat.BallPrediction, error) {
+func (b *bridgeWindowsAmd64) GetBallPrediction() (*flat.BallPrediction, error) {
 	b.getBallPredictionProc.Lock()
 	defer b.getBallPredictionProc.Unlock()
 
-	ptr, size, errno := b.getBallPredictionProc.Call()
+	ballPredictionByteBuffer := byteBuffer{}
+	_, _, errno := b.getBallPredictionProc.Call(uintptr(unsafe.Pointer(&ballPredictionByteBuffer)))
 
 	if errno != syscall.Errno(0) {
 		return nil, fmt.Errorf("GetBallPrediction error: %v", errno)
 	}
+
+	ptr := ballPredictionByteBuffer.ptr
+	size := ballPredictionByteBuffer.size
 
 	ballPredictionBytes := make([]byte, size)
 	for i := 0; i < int(size); i++ {
@@ -116,7 +126,7 @@ func (b *bridgeWindows386) GetBallPrediction() (*flat.BallPrediction, error) {
 }
 
 // GameFunctions/GameFunctions.hpp
-func (b *bridgeWindows386) SetGameState(gameState *flat.DesiredGameState) error {
+func (b *bridgeWindowsAmd64) SetGameState(gameState *flat.DesiredGameState) error {
 	gameStateBytes := gameState.Table().Bytes
 	gameStateSize := len(gameStateBytes)
 	gameStateBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&gameStateBytes))
@@ -139,7 +149,7 @@ func (b *bridgeWindows386) SetGameState(gameState *flat.DesiredGameState) error 
 	return nil
 }
 
-func (b *bridgeWindows386) StartMatch(matchSettings *flat.MatchSettings) error {
+func (b *bridgeWindowsAmd64) StartMatch(matchSettings *flat.MatchSettings) error {
 	matchSettingsBytes := matchSettings.Table().Bytes
 	matchSettingsSize := len(matchSettingsBytes)
 	matchSettingsBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&matchSettingsBytes))
@@ -163,15 +173,19 @@ func (b *bridgeWindows386) StartMatch(matchSettings *flat.MatchSettings) error {
 }
 
 // GameFunctions/GamePacket.hpp
-func (b *bridgeWindows386) GetFieldInfo() (*flat.FieldInfo, error) {
+func (b *bridgeWindowsAmd64) GetFieldInfo() (*flat.FieldInfo, error) {
 	b.updateFieldInfoFlatbufferProc.Lock()
 	defer b.updateFieldInfoFlatbufferProc.Unlock()
 
-	ptr, size, errno := b.updateFieldInfoFlatbufferProc.Call()
+	fieldInfoByteBuffer := byteBuffer{}
+	_, _, errno := b.updateFieldInfoFlatbufferProc.Call(uintptr(unsafe.Pointer(&fieldInfoByteBuffer)))
 
 	if errno != syscall.Errno(0) {
 		return nil, fmt.Errorf("GetFieldInfo error: %v", errno)
 	}
+
+	ptr := fieldInfoByteBuffer.ptr
+	size := fieldInfoByteBuffer.size
 
 	fieldInfoBytes := make([]byte, size)
 	for i := 0; i < int(size); i++ {
@@ -188,15 +202,19 @@ func (b *bridgeWindows386) GetFieldInfo() (*flat.FieldInfo, error) {
 	return fieldInfo, nil
 }
 
-func (b *bridgeWindows386) GetLiveGameTickPacket() (*flat.GameTickPacket, error) {
+func (b *bridgeWindowsAmd64) GetLiveGameTickPacket() (*flat.GameTickPacket, error) {
 	b.updateLiveDataPacketFlatbufferProc.Lock()
 	defer b.updateLiveDataPacketFlatbufferProc.Unlock()
 
-	ptr, size, errno := b.updateLiveDataPacketFlatbufferProc.Call()
+	gameTickPacketByteBuffer := byteBuffer{}
+	_, _, errno := b.updateLiveDataPacketFlatbufferProc.Call(uintptr(unsafe.Pointer(&gameTickPacketByteBuffer)))
 
 	if errno != syscall.Errno(0) {
 		return nil, fmt.Errorf("GetLiveGameTickPacket error: %v", errno)
 	}
+
+	ptr := gameTickPacketByteBuffer.ptr
+	size := gameTickPacketByteBuffer.size
 
 	gameTickPacketBytes := make([]byte, size)
 	for i := 0; i < int(size); i++ {
@@ -213,24 +231,25 @@ func (b *bridgeWindows386) GetLiveGameTickPacket() (*flat.GameTickPacket, error)
 	return gameTickPacket, nil
 }
 
-func (b *bridgeWindows386) GetMatchSettings() (*flat.MatchSettings, error) {
+func (b *bridgeWindowsAmd64) GetMatchSettings() (*flat.MatchSettings, error) {
 	b.getMatchSettingsProc.Lock()
 	defer b.getMatchSettingsProc.Unlock()
 
-	ptr, size, errno := b.getMatchSettingsProc.Call(2)
+	matchSettingsByteBuffer := byteBuffer{}
+	_, _, errno := b.getMatchSettingsProc.Call(uintptr(unsafe.Pointer(&matchSettingsByteBuffer)))
 
 	if errno != syscall.Errno(0) {
 		fmt.Printf("GetMatchSettings error: %v", errno)
 		return nil, fmt.Errorf("GetMatchSettings error: %v", errno)
 	}
 
+	ptr := matchSettingsByteBuffer.ptr
+	size := matchSettingsByteBuffer.size
+
 	matchSettingsBytes := make([]byte, size)
 	for i := 0; i < int(size); i++ {
 		matchSettingsBytes[i] = *(*byte)(unsafe.Pointer(ptr + uintptr(i)))
 	}
-
-	fmt.Printf("matchSettingsBytes:      %v\n", matchSettingsBytes)
-	fmt.Printf("matchSettingsBytes size: %v\n", size)
 
 	_, _, errno = b.freeProc.Call(ptr)
 	if errno != syscall.Errno(0) {
@@ -243,7 +262,7 @@ func (b *bridgeWindows386) GetMatchSettings() (*flat.MatchSettings, error) {
 }
 
 // GameFunctions/PlayerInfo.hpp
-func (b *bridgeWindows386) SendQuickChat(quickChat *flat.QuickChat) error {
+func (b *bridgeWindowsAmd64) SendQuickChat(quickChat *flat.QuickChat) error {
 	quickChatBytes := quickChat.Table().Bytes
 	quickChatSize := len(quickChatBytes)
 	quickChatBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&quickChatBytes))
@@ -266,7 +285,7 @@ func (b *bridgeWindows386) SendQuickChat(quickChat *flat.QuickChat) error {
 	return nil
 }
 
-func (b *bridgeWindows386) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error) {
+func (b *bridgeWindowsAmd64) ReceiveChat(botIndex, teamIndex, lastMessageIndex int) (*flat.QuickChatMessages, error) {
 	b.receiveChatProc.Lock()
 	defer b.receiveChatProc.Unlock()
 
@@ -291,7 +310,7 @@ func (b *bridgeWindows386) ReceiveChat(botIndex, teamIndex, lastMessageIndex int
 	return quickChatMessages, nil
 }
 
-func (b *bridgeWindows386) UpdatePlayerInput(playerInput *flat.PlayerInput) error {
+func (b *bridgeWindowsAmd64) UpdatePlayerInput(playerInput *flat.PlayerInput) error {
 	playerInputBytes := playerInput.Table().Bytes
 	playerInputSize := len(playerInputBytes)
 	playerInputBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&playerInputBytes))
@@ -315,7 +334,7 @@ func (b *bridgeWindows386) UpdatePlayerInput(playerInput *flat.PlayerInput) erro
 }
 
 // RenderFunctions/RenderFunctions.hpp
-func (b *bridgeWindows386) RenderGroup(renderGroup *flat.RenderGroup) error {
+func (b *bridgeWindowsAmd64) RenderGroup(renderGroup *flat.RenderGroup) error {
 	renderGroupBytes := renderGroup.Table().Bytes
 	renderGroupSize := len(renderGroupBytes)
 	renderGroupBytesHeader := (*reflect.SliceHeader)(unsafe.Pointer(&renderGroupBytes))

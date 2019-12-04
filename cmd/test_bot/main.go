@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/nikkelma/rlbot-go/flat"
-	"github.com/nikkelma/rlbot-go/native"
+	"github.com/nikkelma/rlbot-go/pkg/flat"
+	"github.com/nikkelma/rlbot-go/pkg/native"
 
 	"fmt"
 	// "os"
